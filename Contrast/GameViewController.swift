@@ -34,11 +34,26 @@ class GameViewController: UIViewController, SCNSceneRendererDelegate {
         super.init(coder: aDecoder)
     }
     
+    func restart(){
+        scene = SCNScene()
+        grid = Grid(width: size, height: size, isRandom: true, proportion: 85)
+        grid.addRule(CountRule(name: "Solitude", startState: .alive, endState: .dead, count: 2, type: .lessThan))
+        grid.addRule(CountRule(name: "Survive2", startState: .alive, endState: .alive, count: 2, type: .equals))
+        grid.addRule(CountRule(name: "Survive3", startState: .alive, endState: .alive, count: 3, type: .equals))
+        grid.addRule(CountRule(name: "Overpopulation", startState: .alive, endState: .dead, count: 3, type: .greaterThan))
+        grid.addRule(CountRule(name: "Birth", startState: .dead, endState: .alive, count: 3, type: .equals))
+        setupScene()
+        showGen()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        restart()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupScene()
-        showGen()
+        restart()
     }
     
     func showGen(){
